@@ -1,4 +1,4 @@
-package codeforces.template;
+package hackerrank.wcs10;
 
 import java.io.*;
 import java.util.*;
@@ -7,6 +7,56 @@ public class B implements Runnable{
 
     // solution
     void solve() throws IOException {
+        while (true) {
+            Integer n = readInt();
+            if(n == null)
+                break;
+            Integer[] list = new Integer[n];
+
+            for(int i = 0; i < n; i++){
+                list[i] = readInt();
+            }
+            if(n < 3){
+                println("0");
+            }else {
+                int cnt = Integer.min(giveCount(list, 2), giveCount(list, 3));
+                println(cnt);
+            }
+        }
+    }
+
+    int giveCount(Integer[] list, int x){
+        int up = 0;
+        int dwn = 0;
+        int last = list[0];
+        int cnt = 0;
+        for (int i = 1; i < list.length; i++) {
+            if (list[i] > last) {
+                up++;
+                dwn = 0;
+            } else if (list[i] < last) {
+                dwn++;
+                up = 0;
+            } else {
+                up = dwn = 0;
+            }
+
+            last = list[i];
+
+            if (up == 2) {
+                cnt++;
+                up = 1;
+                if(x==3)
+                    last = list[i - 1];
+            } else if (dwn == 2) {
+                cnt++;
+                dwn = 1;
+                if(x==3)
+                    last = list[i - 1];
+            }
+        }
+
+        return cnt;
 
     }
 
@@ -21,12 +71,14 @@ public class B implements Runnable{
     public void run() {
         try {
             long t1 = System.currentTimeMillis();
-            if (System.getProperty("ONLINE_JUDGE") != null) {
+            //Properties props = System.getProperties();
+            //props.list(System.out);
+            if (System.getProperty("ONLINE_JUDGE") != null || System.getProperty("user.dir").contains("/run")) {
                 in = new BufferedReader(new InputStreamReader(System.in));
                 out = new PrintWriter(System.out);
             } else {
-                in = new BufferedReader(new FileReader("src/codeforces/input.txt"));
-                out = new PrintWriter("src/codeforces/output.txt");
+                in = new BufferedReader(new FileReader("src/hackerrank/input.txt"));
+                out = new PrintWriter("src/hackerrank/output.txt");
             }
             Locale.setDefault(Locale.US);
             solve();
@@ -49,7 +101,6 @@ public class B implements Runnable{
         }catch (NullPointerException npe){
             return null;
         }
-
     }
 
     Integer readInt(){
@@ -75,14 +126,12 @@ public class B implements Runnable{
             return null;
         }
     }
-
-
     void println(Object line){
-        System.out.println(line);
+        out.println(line);
     }
 
     void print(Object line){
-        System.out.print(line);
+        out.print(line);
     }
 
 }

@@ -1,13 +1,39 @@
-package codeforces.template;
+package hackerrank.wcs10;
 
 import java.io.*;
-import java.util.*;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
-public class E implements Runnable{
+public class A implements Runnable{
 
     // solution
     void solve() throws IOException {
+        Integer a, b, c;
+        while (true) {
+            a = readInt();
+            b = readInt();
+            c = readInt();
 
+            if (a == null || b == null || c == null) {
+                break;
+            }
+
+            if (a * 10 > 100)
+                a = 100;
+            else
+                a = a * 10;
+            if (b * 10 > 100)
+                b = 100;
+            else
+                b = b * 10;
+            if (c * 10 > 100)
+                c = 100;
+            else
+                c = c * 10;
+
+            println((a+b+c));
+        }
     }
 
     BufferedReader in;
@@ -15,18 +41,20 @@ public class E implements Runnable{
     StringTokenizer tok = new StringTokenizer("");
 
     public static void main(String[] args) {
-        new Thread(null, new E(), "", 256 * (1L << 20)).start();
+        new Thread(null, new A(), "", 256 * (1L << 20)).start();
     }
 
     public void run() {
         try {
             long t1 = System.currentTimeMillis();
-            if (System.getProperty("ONLINE_JUDGE") != null) {
+            //Properties props = System.getProperties();
+            //props.list(System.out);
+            if (System.getProperty("ONLINE_JUDGE") != null || System.getProperty("user.dir").contains("/run")) {
                 in = new BufferedReader(new InputStreamReader(System.in));
                 out = new PrintWriter(System.out);
             } else {
-                in = new BufferedReader(new FileReader("src/codeforces/input.txt"));
-                out = new PrintWriter("src/codeforces/output.txt");
+                in = new BufferedReader(new FileReader("src/hackerrank/input.txt"));
+                out = new PrintWriter("src/hackerrank/output.txt");
             }
             Locale.setDefault(Locale.US);
             solve();
@@ -50,6 +78,7 @@ public class E implements Runnable{
             return null;
         }
     }
+
     Integer readInt(){
         try {
             return Integer.parseInt(readString());
@@ -73,13 +102,12 @@ public class E implements Runnable{
             return null;
         }
     }
-
     void println(Object line){
-        System.out.println(line);
+        out.println(line);
     }
 
     void print(Object line){
-        System.out.print(line);
+        out.print(line);
     }
 
 }
