@@ -1,4 +1,4 @@
-package algorithm.string.suffixtree;
+package algorithm.string;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -68,12 +68,14 @@ import java.util.Arrays;
  */
 public class SuffixArray {
     private Suffix[] suffixes;
+    private String text;
 
     /**
      * Initializes a suffix array for the given {@code text} string.
      * @param text the input string
      */
     public SuffixArray(String text) {
+        this.text = text;
         int n = text.length();
         this.suffixes = new Suffix[n];
         for (int i = 0; i < n; i++)
@@ -115,7 +117,7 @@ public class SuffixArray {
      * Returns the length of the input string.
      * @return the length of the input string
      */
-    public int length() {
+    private int length() {
         return suffixes.length;
     }
 
@@ -127,7 +129,7 @@ public class SuffixArray {
      * @return the index into the original string of the <em>i</em>th smallest suffix
      * @throws java.lang.IndexOutOfBoundsException unless {@code 0 <= i < n}
      */
-    public int index(int i) {
+    private int index(int i) {
         if (i < 0 || i >= suffixes.length) throw new IndexOutOfBoundsException();
         return suffixes[i].index;
     }
@@ -141,7 +143,7 @@ public class SuffixArray {
      * smallest suffix and the <em>i</em>-1st smallest suffix.
      * @throws java.lang.IndexOutOfBoundsException unless {@code 1 <= i < n}
      */
-    public int lcp(int i) {
+    private int lcp(int i) {
         if (i < 1 || i >= suffixes.length) throw new IndexOutOfBoundsException();
         return lcp(suffixes[i], suffixes[i-1]);
     }
@@ -161,7 +163,7 @@ public class SuffixArray {
      * @return the <em>i</em> smallest suffix as a string
      * @throws java.lang.IndexOutOfBoundsException unless {@code 0 <= i < n}
      */
-    public String select(int i) {
+    private String select(int i) {
         if (i < 0 || i >= suffixes.length) throw new IndexOutOfBoundsException();
         return suffixes[i].toString();
     }
@@ -173,7 +175,7 @@ public class SuffixArray {
      * @param query the query string
      * @return the number of suffixes strictly less than {@code query}
      */
-    public int rank(String query) {
+    private int rank(String query) {
         int lo = 0, hi = suffixes.length - 1;
         while (lo <= hi) {
             int mid = lo + (hi - lo) / 2;
@@ -195,5 +197,43 @@ public class SuffixArray {
         return query.length() - suffix.length();
     }
 
+    public int search(String pattern)
+    {
+        int m = pattern.length();
+        int n = this.text.length();
+        int l = 0, r = n - 1;
+        while (l <= r) {
+            int mid = l + (r - l)/2;
+            int index = this.index(mid);
+            String midString  = text.substring(index, Math.min(index+m, n));
+            int res = pattern.compareTo(midString);
+            if (res == 0) {
+                return this.index(mid);
+            }
+
+            if (res < 0) r = mid - 1;
+            else l = mid + 1;
+        }
+        return -1;
+    }
+
+    public void debug(){
+
+        System.out.println("  i ind lcp rnk select");
+        System.out.println("---------------------------");
+        for (int i = 0; i < this.text.length(); i++) {
+            int index = this.index(i);
+            String ith = "\"" + this.text.substring(index, Math.min(index + 50, this.text.length())) + "\"";
+            assert this.text.substring(index).equals(this.select(i));
+            int rank = this.rank(this.text.substring(index));
+            if (i == 0) {
+                System.out.printf("%3d %3d %3s %3d %s\n", i, index, "-", rank, ith);
+            }
+            else {
+                int lcp = this.lcp(i);
+                System.out.printf("%3d %3d %3d %3d %s\n", i, index, lcp, rank, ith);
+            }
+        }
+    }
 }
 
